@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<TestCaseEntity>
-   <description></description>
-   <name>TC17_RemoveProduct</name>
-   <tag></tag>
-   <comment></comment>
-   <recordOption>OTHER</recordOption>
-   <testCaseGuid>e5cf1004-2ae1-4bdf-b0ef-880e0b3f65fd</testCaseGuid>
-</TestCaseEntity>

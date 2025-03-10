@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<TestCaseEntity>
-   <description></description>
-   <name>TC16_LoginBeforeCheckout</name>
-   <tag></tag>
-   <comment></comment>
-   <recordOption>OTHER</recordOption>
-   <testCaseGuid>a9ca77fc-c996-487c-9f56-90ea325a9ea7</testCaseGuid>
-</TestCaseEntity>

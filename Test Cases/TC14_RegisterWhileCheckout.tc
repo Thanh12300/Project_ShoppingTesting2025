@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<TestCaseEntity>
-   <description></description>
-   <name>TC14_RegisterWhileCheckout</name>
-   <tag></tag>
-   <comment></comment>
-   <recordOption>OTHER</recordOption>
-   <testCaseGuid>575717f4-922e-43b9-acf6-d85e95c5259d</testCaseGuid>
-</TestCaseEntity>
