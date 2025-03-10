@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC5_Register user_Unhappy case</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>f46a4bb0-8c08-4d24-baa4-deb6ce766dcc</testCaseGuid>
+</TestCaseEntity>
