@@ -7,11 +7,11 @@
    <selectorCollection>
       <entry>
          <key>BASIC</key>
-         <value></value>
       </entry>
       <entry>
          <key>XPATH</key>
-         <value>//div[@class='product-overlay']//p[contains(text(),'${productName}')]//following-sibling::a[contains(@class,'add-to-cart')]</value>
+         <value>(//div[@class='features_items']//div[contains(@class, 'col-sm-4')]//div[@class='overlay-content']//a)['$(index)']&#xd;
+</value>
       </entry>
    </selectorCollection>
    <selectorMethod>XPATH</selectorMethod>

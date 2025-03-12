@@ -7,11 +7,10 @@
    <selectorCollection>
       <entry>
          <key>BASIC</key>
-         <value></value>
       </entry>
       <entry>
          <key>XPATH</key>
-         <value>//table[@id='cart_info_table']//td[@class='cart_description']/h4/a[text()='${productName}']</value>
+         <value>//table[@id='cart_info_table']//thead//td//ancestor::thead//following::tbody//td[@class='cart_description']//a</value>
       </entry>
    </selectorCollection>
    <selectorMethod>XPATH</selectorMethod>

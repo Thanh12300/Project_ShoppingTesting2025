@@ -18,3 +18,6 @@ import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
 
 import shoppingProject.customKey
+
+CustomKeywords.'shoppingProject.customKey.launchWeb'()
+CustomKeywords.'shoppingProject.customKey.addToCart'()
