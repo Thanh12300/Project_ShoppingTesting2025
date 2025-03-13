@@ -6,12 +6,11 @@
    <elementGuidId>47e89493-2e81-43a4-81a9-f5eefdb439ac</elementGuidId>
    <selectorCollection>
       <entry>
-         <key>BASIC</key>
-         <value></value>
+         <key>XPATH</key>
+         <value>(//div[@class='features_items']/div[contains(@class, 'col-sm-4')])[${index}]</value>
       </entry>
       <entry>
-         <key>XPATH</key>
-         <value>//div[@class='features_items']//div[@class='col-sm-4']['${index}']</value>
+         <key>BASIC</key>
       </entry>
    </selectorCollection>
    <selectorMethod>XPATH</selectorMethod>

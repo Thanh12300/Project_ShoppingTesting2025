@@ -247,47 +247,44 @@ public class customKey {
 
 	@Keyword
 	public static void addToCart() {
-	    '4. Click Products button'
-	    WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_product'))
-	
-	    '5. Hover over first product and click Add to cart'
-	    WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Product/item_product', [('index'): 1]))
-	    WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/btn_addcart', [('index'): 1]))
-	
-	    '6. Click Continue Shopping button'
-	    WebUI.waitForElementVisible(findTestObject('Object Repository/ShoppingProject/Product/popupCart'), 5)
-	    WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/btn_popup_continue'))
-	
-	    '7. Hover over second product and click Add to cart'
-	    WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Product/item_product', [('index'): 2]))
-	    WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/btn_addcart', [('index'): 2]))
-	
-	    '8. Click View Cart button'
-	    WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/link_viewcart'))
-	
-	    '9. Verify both products are added to Cart'
+		'4. Click Products button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_product'))
+
+		'5. Hover over first product and click Add to cart'
+		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Product/item_product', [('index'): 1]))
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/btn_addcart', [('index'): 1]))
+
+		'6. Click Continue Shopping button'
+		WebUI.waitForElementVisible(findTestObject('Object Repository/ShoppingProject/Product/popupCart'), 5)
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/btn_popup_continue'))
+
+		'7. Hover over second product and click Add to cart'
+		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Product/item_product', [('index'): 2]))
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/btn_addcart', [('index'): 2]))
+
+		'8. Click View Cart button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/link_viewcart'))
+
+		'9. Verify both products are added to Cart'
 		int productCount = WebUI.findWebElements(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_name'), 10).size()
-	    for (int i = 1; i <= productCount; i++) {
-	        TestObject cartProduct = findTestObject('Object Repository/ShoppingProject/Cart/cart_product_name', [('index'): i])
-	        WebUI.verifyElementPresent(cartProduct, 10)
-	    }
-	
-	    '10. Verify their prices, quantity and total price'
-	    for (int i = 1; i <= productCount; i++) {
-	        String price = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_price', [('index'): i]))
-	        String quantity = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_quantity', [('index'): i]))
-	        String displayedTotal = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_total', [('index'): i]))
-	
-	        double priceValue = Double.parseDouble(price.replace("Rs. ", ""))
-	        int quantityValue = Integer.parseInt(quantity)
-	        double expectedTotal = priceValue * quantityValue
-	
+		for (int i = 1; i <= productCount; i++) {
+			TestObject cartProduct = findTestObject('Object Repository/ShoppingProject/Cart/cart_product_name', [('index'): i])
+			WebUI.verifyElementPresent(cartProduct, 10)
+		}
 
-	        WebUI.verifyEqual(expectedTotal.toString(), displayedTotal.replace("Rs. ", ""))
-	        WebUI.comment("Expected: " + expectedTotal + ", Displayed: " + displayedTotal)
-	    }
+		'10. Verify their prices, quantity and total price'
+		for (int i = 1; i <= productCount; i++) {
+			String price = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_price', [('index'): i]))
+			String quantity = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_quantity', [('index'): i]))
+			String displayedTotal = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_total', [('index'): i]))
+
+			double priceValue = Double.parseDouble(price.replace("Rs. ", ""))
+			int quantityValue = Integer.parseInt(quantity)
+			double expectedTotal = priceValue * quantityValue
+
+
+			WebUI.verifyEqual(expectedTotal.toString(), displayedTotal.replace("Rs. ", ""))
+			WebUI.comment("Expected: " + expectedTotal + ", Displayed: " + displayedTotal)
+		}
 	}
-
-
-	
 }
