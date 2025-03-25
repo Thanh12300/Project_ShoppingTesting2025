@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>link_viewcart</name>
+   <name>row_product</name>
    <tag></tag>
-   <elementGuidId>2a7b6ddb-227b-4a41-b50b-c53f31d058d9</elementGuidId>
+   <elementGuidId>131e3ed8-3446-4ec7-a726-508259cf35d8</elementGuidId>
    <selectorCollection>
+      <entry>
+         <key>XPATH</key>
+         <value>//table[@id=&quot;cart_info_table&quot;]//tbody//tr</value>
+      </entry>
       <entry>
          <key>BASIC</key>
          <value></value>
-      </entry>
-      <entry>
-         <key>XPATH</key>
-         <value>//div[@class='modal-content']//a</value>
       </entry>
    </selectorCollection>
    <selectorMethod>XPATH</selectorMethod>

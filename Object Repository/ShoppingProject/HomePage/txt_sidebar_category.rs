@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>cart_product_quantity</name>
+   <name>txt_sidebar_category</name>
    <tag></tag>
-   <elementGuidId>9ba012a9-3087-40ee-862b-935575b878ce</elementGuidId>
+   <elementGuidId>1b494544-93e0-48d9-b95a-6a80f03878f2</elementGuidId>
    <selectorCollection>
       <entry>
          <key>XPATH</key>
-         <value>//table[@id='cart_info_table']//thead//td//ancestor::thead//following::tbody//tr[${index}]//td[@class='cart_quantity']//button</value>
+         <value>//div[@class=&quot;left-sidebar&quot;]//h2[text()='${textInSideBar}']</value>
       </entry>
       <entry>
          <key>BASIC</key>
+         <value></value>
       </entry>
    </selectorCollection>
    <selectorMethod>XPATH</selectorMethod>

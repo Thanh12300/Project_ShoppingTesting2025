@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>popupCart</name>
+   <name>btn_remove</name>
    <tag></tag>
-   <elementGuidId>1c079c8d-0feb-46eb-84ac-b5e483f1f4fe</elementGuidId>
+   <elementGuidId>d878e1b2-ecef-49d5-bb52-793ab04978a9</elementGuidId>
    <selectorCollection>
+      <entry>
+         <key>XPATH</key>
+         <value>//table[@id=&quot;cart_info_table&quot;]//tbody//tr['${index}']//td[@class=&quot;cart_delete&quot;]/a</value>
+      </entry>
       <entry>
          <key>BASIC</key>
          <value></value>
-      </entry>
-      <entry>
-         <key>XPATH</key>
-         <value>//div[@class='modal-content']</value>
       </entry>
    </selectorCollection>
    <selectorMethod>XPATH</selectorMethod>

@@ -6,11 +6,11 @@
    <elementGuidId>c7cbe637-0020-4699-989d-ac074167f53f</elementGuidId>
    <selectorCollection>
       <entry>
-         <key>BASIC</key>
+         <key>XPATH</key>
+         <value>//table[@id='cart_info_table']//thead//td//ancestor::thead//following::tbody//tr[${index}]//td[@class='cart_total']</value>
       </entry>
       <entry>
-         <key>XPATH</key>
-         <value>//table[@id='cart_info_table']//thead//td//ancestor::thead//following::tbody//tr['$(index)']//td[@class='cart_total']</value>
+         <key>BASIC</key>
       </entry>
    </selectorCollection>
    <selectorMethod>XPATH</selectorMethod>

@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>cart_product_quantity</name>
+   <name>txt_detail_productName</name>
    <tag></tag>
-   <elementGuidId>9ba012a9-3087-40ee-862b-935575b878ce</elementGuidId>
+   <elementGuidId>8838c421-19b8-48bf-8902-7b3ba5d6b728</elementGuidId>
    <selectorCollection>
       <entry>
-         <key>XPATH</key>
-         <value>//table[@id='cart_info_table']//thead//td//ancestor::thead//following::tbody//tr[${index}]//td[@class='cart_quantity']//button</value>
+         <key>BASIC</key>
+         <value></value>
       </entry>
       <entry>
-         <key>BASIC</key>
+         <key>XPATH</key>
+         <value>//div[@class='product-details']//h2</value>
       </entry>
    </selectorCollection>
    <selectorMethod>XPATH</selectorMethod>

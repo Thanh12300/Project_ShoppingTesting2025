@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>cart_product_quantity</name>
+   <name>btn_addcart</name>
    <tag></tag>
-   <elementGuidId>9ba012a9-3087-40ee-862b-935575b878ce</elementGuidId>
+   <elementGuidId>8dfd2632-829e-41d6-9df1-328dc3dfb4f6</elementGuidId>
    <selectorCollection>
       <entry>
          <key>XPATH</key>
-         <value>//table[@id='cart_info_table']//thead//td//ancestor::thead//following::tbody//tr[${index}]//td[@class='cart_quantity']//button</value>
+         <value>(//div[@class='product-overlay'])[${index}]//a[contains(text(),'Add to cart')]&#xd;
+</value>
       </entry>
       <entry>
          <key>BASIC</key>

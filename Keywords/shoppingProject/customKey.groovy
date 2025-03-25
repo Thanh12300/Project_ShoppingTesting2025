@@ -1,27 +1,20 @@
 package shoppingProject
-
-import static com.kms.katalon.core.checkpoint.CheckpointFactory.findCheckpoint
-import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
-import static com.kms.katalon.core.testdata.TestDataFactory.findTestData
 import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
-import static com.kms.katalon.core.testobject.ObjectRepository.findWindowsObject
 
-import org.stringtemplate.v4.compiler.STParser.list_return
+import org.openqa.selenium.By
+import org.openqa.selenium.WebElement
 
 import com.kms.katalon.core.annotation.Keyword
-import com.kms.katalon.core.checkpoint.Checkpoint
-import com.kms.katalon.core.cucumber.keyword.CucumberBuiltinKeywords as CucumberKW
-import com.kms.katalon.core.mobile.keyword.MobileBuiltInKeywords as Mobile
 import com.kms.katalon.core.model.FailureHandling
-import com.kms.katalon.core.testcase.TestCase
-import com.kms.katalon.core.testdata.TestData
-import com.kms.katalon.core.testobject.TestObject
-import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import com.kms.katalon.core.util.KeywordUtil
+import com.kms.katalon.core.webui.common.WebUiCommonHelper
+import com.kms.katalon.core.webui.driver.DriverFactory
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
-import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
 
-import internal.GlobalVariable
-import io.netty.handler.codec.http.multipart.FileUpload
+
+
+
+
 
 public class customKey {
 
@@ -29,23 +22,25 @@ public class customKey {
 	@Keyword
 	public static void launchWeb() {
 
-		'1. Launch browser'
-		WebUI.openBrowser('')
 		'2. Navigate to url http://automationexercise.com'
 		WebUI.navigateToUrl('https://automationexercise.com/')
 		'3. Verify that home page is visible successfully'
 		WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/HomePage/img_logo'), 5)
 	}
 
-	//register account
-	@Keyword
-	public static void register(String name, String email) {
+	//TC1
+
+	public static void verifyTextInRegister() {
 		'4. Click on Signup / Login button'
 		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_signup_login'))
 
 		'5. Verify New User Signup! is visible'
 		WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/SignupLogin/SignUp/txt_signup'), 5)
+	}
 
+	@Keyword
+	public static void register(String name, String email) {
+		verifyTextInRegister()
 		'6. Enter name and email address'
 		WebUI.setText(findTestObject('Object Repository/ShoppingProject/SignupLogin/SignUp/input_name'), name)
 		WebUI.setText(findTestObject('Object Repository/ShoppingProject/SignupLogin/SignUp/input_signup_email'), email)
@@ -245,46 +240,407 @@ public class customKey {
 		WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/Shared/txt_subscription_success',[('message'):'You have been successfully subscribed!']), 10)
 	}
 
+	//TC12
 	@Keyword
 	public static void addToCart() {
+		List<String> addedProducts = []
+
 		'4. Click Products button'
 		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_product'))
+		WebUI.scrollToElement(findTestObject('Object Repository/ShoppingProject/Shared/item_product', [('index'): 1]), 5)
+
 
 		'5. Hover over first product and click Add to cart'
-		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Product/item_product', [('index'): 1]))
-		WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/btn_addcart', [('index'): 1]))
+		String firstProductName = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Product/item_product_name', [('index'): 1]))
+		addedProducts.add(firstProductName)
+		KeywordUtil.logInfo(firstProductName)
+		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Shared/item_product', [('index'): 1]))
+		WebUI.delay(2)
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Shared/btn_addcart', [('index'): 1]))
 
 		'6. Click Continue Shopping button'
-		WebUI.waitForElementVisible(findTestObject('Object Repository/ShoppingProject/Product/popupCart'), 5)
+		WebUI.waitForElementVisible(findTestObject('Object Repository/ShoppingProject/Shared/popupCart'), 5)
 		WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/btn_popup_continue'))
 
 		'7. Hover over second product and click Add to cart'
-		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Product/item_product', [('index'): 2]))
-		WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/btn_addcart', [('index'): 2]))
-
+		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Shared/item_product', [('index'): 2]))
+		WebUI.delay(2)
+		String secondProductName = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Product/item_product_name', [('index'): 2]))
+		
+		addedProducts.add(secondProductName)
+		KeywordUtil.logInfo(secondProductName)
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Shared/btn_addcart', [('index'): 2]))
 		'8. Click View Cart button'
-		WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/link_viewcart'))
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Shared/link_viewcart'))
 
 		'9. Verify both products are added to Cart'
+		for (String productName : addedProducts) {
+			boolean isFound = isProductInCart(productName)
+			KeywordUtil.logInfo(productName)
+			WebUI.verifyEqual(isFound, true, FailureHandling.CONTINUE_ON_FAILURE)
+		}
+
+		'10. Verify price calculation for each product'
 		int productCount = WebUI.findWebElements(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_name'), 10).size()
 		for (int i = 1; i <= productCount; i++) {
-			TestObject cartProduct = findTestObject('Object Repository/ShoppingProject/Cart/cart_product_name', [('index'): i])
-			WebUI.verifyElementPresent(cartProduct, 10)
-		}
+			String price = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_price', [('index'): i])).replace("Rs. ", "").trim()
+			String quantity = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_quantity', [('index'): i])).trim()
+			String displayedTotal = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_total', [('index'): i])).replace("Rs. ", "").trim()
 
-		'10. Verify their prices, quantity and total price'
-		for (int i = 1; i <= productCount; i++) {
-			String price = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_price', [('index'): i]))
-			String quantity = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_quantity', [('index'): i]))
-			String displayedTotal = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_total', [('index'): i]))
-
-			double priceValue = Double.parseDouble(price.replace("Rs. ", ""))
+			double priceValue = Double.parseDouble(price)
 			int quantityValue = Integer.parseInt(quantity)
 			double expectedTotal = priceValue * quantityValue
+			double displayedTotalValue = Double.parseDouble(displayedTotal)
 
-
-			WebUI.verifyEqual(expectedTotal.toString(), displayedTotal.replace("Rs. ", ""))
-			WebUI.comment("Expected: " + expectedTotal + ", Displayed: " + displayedTotal)
+			WebUI.verifyEqual(expectedTotal, displayedTotalValue)
+			KeywordUtil.logInfo("Product index ${i}: Expected total: ${expectedTotal}, Displayed: ${displayedTotalValue}")
 		}
+	}
+
+	def static boolean isProductInCart(String productNameToCheck) {
+		List<WebElement> cartProducts = WebUI.findWebElements(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_name'), 10)
+
+		for (WebElement product : cartProducts) {
+			if (product.getText().trim().equalsIgnoreCase(productNameToCheck)) {
+				KeywordUtil.markPassed("Product '" + productNameToCheck + "' is found in the cart.")
+				return true
+			}
+		}
+
+		KeywordUtil.markFailed("Product '" + productNameToCheck + "' is NOT found in the cart!")
+		return false
+	}
+
+
+	//TC13
+	@Keyword
+	def verifyQuantityInCart(int quantity) {
+		WebUI.scrollToElement(findTestObject('Object Repository/ShoppingProject/HomePage/list_product'), 5)
+
+		'4. Click View Product for any product on home page'
+		String productNameInHomePage = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Product/item_product_name', [('index'): 3]))
+		KeywordUtil.logInfo('Product in home page: ' + productNameInHomePage)
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/item_product', [('index'): 3]))
+
+		
+		'5. Verify product detail is opened'
+		String productNameInDetail = WebUI.getText(findTestObject('Object Repository/ShoppingProject/ProductDetail/txt_detail_productName'))
+		KeywordUtil.logInfo('Product in details: ' + productNameInDetail)
+
+		if (WebUI.verifyMatch(productNameInDetail, productNameInHomePage, false, FailureHandling.CONTINUE_ON_FAILURE)) {
+			KeywordUtil.markPassed('Product name on the detail page ("' + productNameInDetail + '") MATCHES the product name on the home page ("' + productNameInHomePage + '").')
+		} else {
+			KeywordUtil.markFailedAndStop('ERROR: Product name on the detail page ("' + productNameInDetail + '") DOES NOT match the product name on the home page ("' + productNameInHomePage + '").')
+		}
+
+		'6. Increase quantity'
+		WebUI.setText(findTestObject('Object Repository/ShoppingProject/ProductDetail/input_quantity'), quantity.toString())
+
+		'7. Click Add to cart button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/ProductDetail/btn_add_product'))
+
+		'8. Click View Cart button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Shared/link_viewcart'))
+
+		'9. Verify that product is displayed in cart page with exact quantity'
+		if (!isProductInCart(productNameInDetail)) {
+			KeywordUtil.markFailedAndStop("ERROR: Product '" + productNameInDetail + "' is NOT found in the cart.")
+		}
+
+		WebElement quantityElement = DriverFactory.getWebDriver().findElement(By.xpath("//td[@class='cart_quantity']//button"))
+		String quantityText = quantityElement.getText().trim()  
+		int quantityInCart = Integer.parseInt(quantityText)
+
+	
+	    if (quantityInCart == quantity) {
+	        KeywordUtil.markPassed("Quantity verification passed! Expected: ${quantity}, Found: ${quantityInCart}")
+	    } else {
+	        KeywordUtil.markFailed("ERROR: Expected quantity ${quantity} but found ${quantityInCart} in cart.")
+	    }
+		
+	}
+
+
+	//TC14
+	@Keyword
+	def checkRegisterWhileCheckOut(String name, String email) {
+		'4. Add products to cart'
+		WebUI.scrollToElement(findTestObject('Object Repository/ShoppingProject/HomePage/list_product'), 5)
+		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Shared/item_product', [('index'): 1]))
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Shared/btn_addcart', [('index'): 1]))
+
+		'5. Click Cart button'
+		WebUI.scrollToPosition(0, 0)
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_cart'))
+
+		'6. Verify that cart page is displayed'
+		WebUI.verifyTextPresent('Shopping Cart', false)
+
+		'7. Click Proceed To Checkout'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Cart/btn_proceed_checkout',['(textCheckout)':'Proceed To Checkout']))
+
+		'8. Click Register / Login button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Cart/btn_popup_login_register'))
+	}
+
+	@Keyword
+	def checkCheckout() {
+		'12.Click Cart button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_cart'))
+
+		'13. Click Proceed To Checkout button'
+
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Cart/btn_proceed_checkout',['(textCheckout)':'Proceed To Checkout']))
+
+		'14. Verify Address Details and Review Your Order'
+
+		'15. Enter description in comment text area and click Place Order'
+
+		'16. Enter payment details: Name on Card, Card Number, CVC, Expiration date'
+
+		'17. Click Pay and Confirm Order button'
+
+		'18. Verify success message Your order has been placed successfully!'
+	}
+
+	//TC15
+
+
+
+	//TC16
+
+
+
+
+	//TC17
+	@Keyword
+	def checkRemoveProductFromCart() {
+		'4. Add products to cart'
+		WebUI.scrollToElement(findTestObject('Object Repository/ShoppingProject/HomePage/list_product'), 5)
+		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Shared/item_product', [('index'): 1]))
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Shared/btn_addcart', [('index'): 1]))
+		WebUI.waitForElementVisible(findTestObject('Object Repository/ShoppingProject/Shared/popupCart'), 5)
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/btn_popup_continue'))
+
+		'5. Click Cart button'
+		WebUI.scrollToPosition(0, 0)
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_cart'))
+
+		'6. Verify that cart page is displayed'
+		WebUI.verifyTextPresent('Shopping Cart', false)
+
+		'7. Click X button corresponding to particular product'
+		List<WebElement> productsBefore = WebUiCommonHelper.findWebElements(findTestObject('Object Repository/ShoppingProject/Cart/row_product'),5)
+		int productCountBefore = productsBefore.size()
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Cart/btn_remove',[('index'): 2]))
+		List<WebElement> productsAfter = WebUiCommonHelper.findWebElements(findTestObject('Object Repository/ShoppingProject/Cart/row_product'),5)
+		int productCountAfter = productsAfter.size()
+		'8. Verify that product is removed from the cart'
+		if (productCountBefore > 1) {
+			if (productCountAfter == productCountBefore - 1) {
+				KeywordUtil.markPassed("Remove product successfully!")
+			} else {
+				KeywordUtil.markFailed("Error: Remove product failed!")
+			}
+		} else {
+			WebUI.verifyTextPresent('Cart is empty!', false, FailureHandling.CONTINUE_ON_FAILURE)
+			KeywordUtil.markPassed("Cart is empty after removing the last product!")
+		}
+	}
+
+
+
+	//TC18
+	@Keyword
+	def checkCategoryInSidebar() {
+		WebUI.scrollToElement(findTestObject('Object Repository/ShoppingProject/HomePage/txt_sidebar_category', [('textInSideBar'):'Category']), 10, FailureHandling.STOP_ON_FAILURE)
+		'3. Verify that categories are visible on left side bar'
+		boolean isCategoryVisible = WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/HomePage/txt_sidebar_category', [('textInSideBar'):'Category']),
+		10, FailureHandling.CONTINUE_ON_FAILURE)
+
+		if (isCategoryVisible) {
+			KeywordUtil.markPassed("Categories are visible on the left sidebar.")
+		} else {
+			KeywordUtil.markFailed("Categories are NOT visible on the left sidebar.")
+		}
+	}
+
+	@Keyword
+	def checkCategoryProduct(String parentCategory, String childCategory) {
+		'4. Click on parent category'
+		WebUI.waitForElementVisible(findTestObject('Object Repository/ShoppingProject/HomePage/txt_category_parent', [('categoryParent'): parentCategory]), 10)
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/txt_category_parent', [('categoryParent'): parentCategory]))
+
+		'5. Click on child category under the selected parent category'
+		WebUI.waitForElementVisible(findTestObject('Object Repository/ShoppingProject/HomePage/txt_category_child', [('categoryParent'): parentCategory, 'categoryChild': childCategory]), 10)
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/txt_category_child', [('categoryParent'): parentCategory, 'categoryChild': childCategory]))
+
+		'6. Wait for page to load and verify category text'
+		WebUI.waitForPageLoad(10)
+		String categoryText = parentCategory + " - " + childCategory + " Products"
+		boolean isCategoryDisplayed = WebUI.verifyTextPresent(categoryText, false, FailureHandling.CONTINUE_ON_FAILURE)
+
+
+		if (isCategoryDisplayed) {
+			KeywordUtil.markPassed("${parentCategory} - ${childCategory} category page is displayed correctly.")
+		} else {
+			KeywordUtil.markFailed("${parentCategory} - ${childCategory} category page did not load correctly.")
+		}
+	}
+
+	//TC19
+	@Keyword
+	def checkBrandInSidebar() {
+		'3. Click on Products button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_product'))
+		'4. Verify that Brands are visible on left side bar'
+		boolean isBrandVisible = WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/HomePage/txt_sidebar_category', [('textInSideBar'):'Brands']),
+		10, FailureHandling.CONTINUE_ON_FAILURE)
+
+		if (isBrandVisible) {
+			KeywordUtil.markPassed("Brands are visible on the left sidebar.")
+		} else {
+			KeywordUtil.markFailed("Brands are NOT visible on the left sidebar.")
+		}
+	}
+
+	@Keyword
+	def checkBrandProduct(String brand) {
+		'5. Click on any brand name'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/txt_brand',[('brandName'):brand]))
+		'6. Verify that user is navigated to brand page and brand products are displayed'
+		String brandText = 'Brand' + ' - ' + brand + " Products"
+		boolean isBrandDisplayed = WebUI.verifyTextPresent(brandText, false, FailureHandling.CONTINUE_ON_FAILURE)
+		if (isBrandDisplayed) {
+			KeywordUtil.markPassed("${brand} page is displayed correctly.")
+		} else {
+			KeywordUtil.markFailed("${brand} page did not load correctly.")
+		}
+
+		boolean isProductDisplayed = WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/HomePage/list_product'), 5)
+		if (isProductDisplayed) {
+			KeywordUtil.markPassed("Products are displayed correctly.")
+		} else {
+			KeywordUtil.markFailed("Products did not load correctly.")
+		}
+	}
+
+	//TC20
+	@Keyword
+	def checkCartAfterLogin(String name, String password) {
+		'8. Add those products to cart'
+		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Shared/item_product', [('index'): 2]))
+		String productNameInProductPage = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Product/item_product_name', [('indexProduct'): '2']))
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Shared/btn_addcart', [('index'): 2]))
+
+		'9. Click Cart button and verify that products are visible in cart'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_cart'))
+
+		if (!isProductInCart(productNameInProductPage)) {
+			KeywordUtil.markFailedAndStop("ERROR: Product '" + productNameInProductPage + "' is NOT found in the cart before login.")
+		}
+
+		'10. Click Signup / Login button and submit login details'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_signup_login'))
+		login(name, password)
+
+		'11. Again, go to Cart page'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_cart'))
+
+		'12. Verify that those products are visible in cart after login as well'
+		if (!isProductInCart(productNameInProductPage)) {
+			KeywordUtil.markFailedAndStop("ERROR: Product '" + productNameInProductPage + "' is NOT found in the cart after login.")
+		}
+	}
+
+	//TC21
+	@Keyword
+	def addReviewOnProduct(String name, String email, String review) {
+		'3. Click on Products button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_product'))
+
+		'4. Verify user is navigated to ALL PRODUCTS page successfully'
+		WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/Product/title_AllProducts'), 5)
+		'5. Click on View Product button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Product/link_view_product', [('index'):1]))
+		'6. Verify Write Your Review is visible'
+		WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/ProductDetail/txt_title_review'), 5)
+
+		'7. Enter name, email and review'
+		WebUI.setText(findTestObject('Object Repository/ShoppingProject/ProductDetail/input_review_name'), name)
+		WebUI.setText(findTestObject('Object Repository/ShoppingProject/ProductDetail/input_review_email'), email)
+		WebUI.setText(findTestObject('Object Repository/ShoppingProject/ProductDetail/input_review'), review)
+		'8. Click Submit button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/ProductDetail/btn_review_submit'))
+		'9. Verify success message Thank you for your review.'
+		WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/ProductDetail/txt_review_success', [('message'):'Thank you for your review.']), 5)
+	}
+
+
+	//TC22
+	@Keyword
+	def checkAddToCartFromRecommend() {
+		'3. Scroll to bottom of page'
+		WebUI.scrollToPosition(0, 99999)
+
+		'4. Verify RECOMMENDED ITEMS are visible'
+		boolean isRecommendedItemDisplayed = WebUI.verifyElementPresent('recommended items', 5)
+		if (isRecommendedItemDisplayed) {
+			KeywordUtil.markPassed("Recommended Items is displayed correctly.")
+		} else {
+			KeywordUtil.markFailed("Recommended Items did not load correctly.")
+		}
+
+		'5. Click on Add To Cart on Recommended product'
+		String productName = WebUI.getText(findTestObject('Object Repository/ShoppingProject/HomePage/item_recommend_name', [('indexProduct'): '2']))
+		KeywordUtil.logInfo("Selected product: " + productName)
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/btn_item_recommend', [('indexProduct'): '2']))
+
+		'6. Click on View Cart button'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Shared/link_viewcart'))
+
+		'7. Verify that product is displayed in cart page'
+		String cartProductName = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Cart/cart_product_name'))
+		WebUI.verifyMatch(cartProductName, productName, false)
+		KeywordUtil.markPassed("Product successfully added to cart and verified.")
+	}
+
+	//TC23
+	def checkAdressDetail() {
+	}
+
+	//TC24
+
+
+
+	//TC25
+	@Keyword
+	def verifyScrollUsingArrowButton() {
+		'4. Scroll down page to bottom'
+		WebUI.executeJavaScript('window.scrollTo(0, document.body.scrollHeight);', [])
+
+		'5. Verify SUBSCRIPTION is visible'
+		WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/Shared/txt_subscription'), 10)
+
+		'6. Click on arrow at bottom right side to move upward'
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/btn_scroll_up'))
+
+		'7. Verify that page is scrolled up and Full-Fledged practice website for Automation Engineers text is visible on screen'
+		WebUI.verifyTextPresent('Full-Fledged practice website for Automation Engineers', false)
+	}
+
+	//TC26
+	@Keyword
+	def verifyScrollWithoutArrowButton() {
+		'4. Scroll down page to bottom'
+		WebUI.executeJavaScript('window.scrollTo(0, document.body.scrollHeight);', [])
+
+		'5. Verify SUBSCRIPTION is visible'
+		WebUI.verifyElementPresent(findTestObject('Object Repository/ShoppingProject/Shared/txt_subscription'), 10)
+		'6. Scroll up page to top'
+		WebUI.executeJavaScript('window.scrollTo(0, 0);', [])
+
+		'7. Verify that page is scrolled up and Full-Fledged practice website for Automation Engineers text is visible on screen'
+		WebUI.verifyTextPresent('Full-Fledged practice website for Automation Engineers', false)
 	}
 }

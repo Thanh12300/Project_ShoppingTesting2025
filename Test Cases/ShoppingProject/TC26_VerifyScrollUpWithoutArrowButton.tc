@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC26_VerifyScrollUpWithoutArrowButton</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>d975bf08-e011-47f0-bf50-beb57cdef4c8</testCaseGuid>
+</TestCaseEntity>
