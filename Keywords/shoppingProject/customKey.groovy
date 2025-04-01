@@ -266,7 +266,7 @@ public class customKey {
 		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Shared/item_product', [('index'): 2]))
 		WebUI.delay(2)
 		String secondProductName = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Product/item_product_name', [('index'): 2]))
-		
+
 		addedProducts.add(secondProductName)
 		KeywordUtil.logInfo(secondProductName)
 		WebUI.click(findTestObject('Object Repository/ShoppingProject/Shared/btn_addcart', [('index'): 2]))
@@ -322,7 +322,7 @@ public class customKey {
 		KeywordUtil.logInfo('Product in home page: ' + productNameInHomePage)
 		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/item_product', [('index'): 3]))
 
-		
+
 		'5. Verify product detail is opened'
 		String productNameInDetail = WebUI.getText(findTestObject('Object Repository/ShoppingProject/ProductDetail/txt_detail_productName'))
 		KeywordUtil.logInfo('Product in details: ' + productNameInDetail)
@@ -348,16 +348,15 @@ public class customKey {
 		}
 
 		WebElement quantityElement = DriverFactory.getWebDriver().findElement(By.xpath("//td[@class='cart_quantity']//button"))
-		String quantityText = quantityElement.getText().trim()  
+		String quantityText = quantityElement.getText().trim()
 		int quantityInCart = Integer.parseInt(quantityText)
 
-	
-	    if (quantityInCart == quantity) {
-	        KeywordUtil.markPassed("Quantity verification passed! Expected: ${quantity}, Found: ${quantityInCart}")
-	    } else {
-	        KeywordUtil.markFailed("ERROR: Expected quantity ${quantity} but found ${quantityInCart} in cart.")
-	    }
-		
+
+		if (quantityInCart == quantity) {
+			KeywordUtil.markPassed("Quantity verification passed! Expected: ${quantity}, Found: ${quantityInCart}")
+		} else {
+			KeywordUtil.markFailed("ERROR: Expected quantity ${quantity} but found ${quantityInCart} in cart.")
+		}
 	}
 
 
@@ -393,6 +392,7 @@ public class customKey {
 		WebUI.click(findTestObject('Object Repository/ShoppingProject/Cart/btn_proceed_checkout',['(textCheckout)':'Proceed To Checkout']))
 
 		'14. Verify Address Details and Review Your Order'
+		
 
 		'15. Enter description in comment text area and click Place Order'
 
@@ -606,7 +606,38 @@ public class customKey {
 	}
 
 	//TC23
-	def checkAdressDetail() {
+	def addToCartFromHomePage(int indexProduct) {
+		WebUI.mouseOver(findTestObject('Object Repository/ShoppingProject/Shared/item_product', [('index'): indexProduct]))
+		String productNameInProductPage = WebUI.getText(findTestObject('Object Repository/ShoppingProject/Product/item_product_name', [('indexProduct'): indexProduct]))
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Shared/btn_addcart', [('index'): indexProduct]))
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/HomePage/link_cart'))
+		WebUI.verifyTextPresent('Shopping Cart', false)
+		if (!isProductInCart(productNameInProductPage)) {
+			KeywordUtil.markFailedAndStop("ERROR: Product '" + productNameInProductPage + "' is NOT found in the cart before login.")
+		}
+	}
+	
+	
+	def checkAddressDetail(String address1,String address2, String country, String state, String city, String zipcode) {
+		WebUI.click(findTestObject('Object Repository/ShoppingProject/Cart/btn_proceed_checkout'))
+		'12. Verify that the delivery address is same address filled at the time registration of account'
+		String actualDeliveryAddress1 = WebUI.getText(findTestObject('Object Repository/ShoppingProject/CheckoutPage/txt_delivery_address', [('index'): 2]))
+		String actualDeliveryAddress2 = WebUI.getText(findTestObject('Object Repository/ShoppingProject/CheckoutPage/txt_delivery_address', [('index'): 3]))
+		String expectedCityStatePostcode = city + ' ' + state + ' ' + zipcode
+		String actualDeliveryCityStatePostcode = WebUI.getText(findTestObject('Object Repository/ShoppingProject/CheckoutPage/txt_delivery_city_state_postcode'))
+		
+		WebUI.verifyMatch(actualDeliveryAddress1, address1, false, FailureHandling.CONTINUE_ON_FAILURE)
+		WebUI.verifyMatch(actualDeliveryAddress2, address2, false, FailureHandling.CONTINUE_ON_FAILURE)
+		WebUI.verifyMatch(actualDeliveryCityStatePostcode, expectedCityStatePostcode, false, FailureHandling.CONTINUE_ON_FAILURE)
+		
+		'13. Verify that the billing address is same address filled at the time registration of account'
+		String actualBillingAddress1 = WebUI.getText(findTestObject('Object Repository/ShoppingProject/CheckoutPage/txt_delivery_address', [('index'): 2]))
+		String actualBillingAddress2 = WebUI.getText(findTestObject('Object Repository/ShoppingProject/CheckoutPage/txt_delivery_address', [('index'): 3]))
+		String actualBillingCityStatePostcode = WebUI.getText(findTestObject('Object Repository/ShoppingProject/CheckoutPage/txt_delivery_city_state_postcode'))
+		
+		WebUI.verifyMatch(actualBillingAddress1, address1, false, FailureHandling.CONTINUE_ON_FAILURE)
+		WebUI.verifyMatch(actualBillingAddress2, address2, false, FailureHandling.CONTINUE_ON_FAILURE)
+		WebUI.verifyMatch(actualBillingCityStatePostcode, expectedCityStatePostcode, false, FailureHandling.CONTINUE_ON_FAILURE)
 	}
 
 	//TC24
