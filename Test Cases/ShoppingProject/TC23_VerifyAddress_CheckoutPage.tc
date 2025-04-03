@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC23_VerifyAddress_CheckoutPage</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>167622df-18df-4d5d-b1f4-b0a4a410d10c</testCaseGuid>
+</TestCaseEntity>
